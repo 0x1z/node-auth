@@ -17,21 +17,7 @@ const userschema = mongoose.Schema({
         minlength: [6, "please enter the password with length more than 6"]
     }
 });
-
-
-// MONGODB hooks
-// userschema.post('save', function (doc, next) {
-//     console.log("user created sucessfully", doc);
-//     next();
-// });
-
-// userschema.pre('save', function (next) {
-//     console.log("user about to be created", this);
-//     next();
-// });
-
-// hashing passwords with bcrypt
-
+// Mongoose hooks here we using pree hook to salt password
 userschema.pre('save', async function (next) {
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);

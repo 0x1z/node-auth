@@ -30,6 +30,7 @@ const handleErrors = (err) => {
     return errors;
 }
 
+// token creation takes in a secret to sign the token you will need it in middleware to verify
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
     return jwt.sign({ id }, 'dragon ball z', {
@@ -47,8 +48,6 @@ module.exports.log_inGet = (req, res) => {
 
 module.exports.sign_upPost = async (req, res) => {
     const { email, password } = req.body; // Destructure email and password from req.body
-    // console.log(email, password);
-    // res.render('sign_up');
     try {
         const user = await usermodel.create({ email, password });
         const token = createToken(user._id);
@@ -57,7 +56,6 @@ module.exports.sign_upPost = async (req, res) => {
 
     }
     catch (err) {
-        // console.log(err);
         const errors = handleErrors(err);
         res.status(400).json({ errors });
     }
@@ -65,13 +63,11 @@ module.exports.sign_upPost = async (req, res) => {
 }
 
 module.exports.log_inPost = async (req, res) => {
-    // console.log(req.body);
     const { email, password } = req.body; // Destructure email and password from req.body
     try {
         const user = await usermodel.login(email, password);
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 })
-        // console.log(user);
         res.status(200).json({ user: user._id })
     }
     catch (err) {
