@@ -6,6 +6,7 @@ const authRoutes = require('./server/routes/router')
 const Userdb = require('./server/database/connection');
 const cookieParser = require('cookie-parser');
 const auth = require('./server/middleware/authMiddleware');
+const checkUser = require('./server/middleware/authMiddleware');
 
 app.use(express.json());
 app.use(cookieParser());
@@ -17,6 +18,7 @@ app.set('view engine', 'ejs');
 PORT = 3000;
 
 // ROUTES
+app.get('*', checkUser);
 app.get('/', (req, res) => {
     res.render('home.ejs');
 })
