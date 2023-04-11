@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const authRoutes = require('./server/routes/router')
 const Userdb = require('./server/database/connection');
 const cookieParser = require('cookie-parser');
+const auth = require('./server/middleware/authMiddleware');
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -22,9 +24,7 @@ PORT = 3000;
 app.get('/', (req, res) => {
     res.render('home.ejs');
 })
-app.get('/smoothies', (req, res) => {
-    res.render('smoothies.ejs');
-})
+app.get('/smoothies', auth, (req, res) => { res.render('smoothies.ejs'); });
 
 
 app.use(authRoutes);
